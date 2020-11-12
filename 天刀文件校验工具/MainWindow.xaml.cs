@@ -253,10 +253,6 @@ namespace 天刀文件校验工具
                     {
                         result.Add(new FileState() { FilePath = item.Value, State = "文件缺失" });
                     }
-                    else if (allFilePathAndMD5[i][item.Key]!=item.Value)
-                    {
-                        result.Add(new FileState() { FilePath = item.Value, State = "文件异常" });
-                    }
                 }
             }
 
