@@ -1,0 +1,85 @@
+﻿<Window x:Class="天刀文件校验工具.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:天刀文件校验工具"
+        mc:Ignorable="d"
+        Title="天刀文件自助修复工具"
+        MinHeight="480" MinWidth="650" 
+        Height="480" Width="650">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="第一步：选择天刀安装路径" BorderBrush="Black" Margin="10">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="天刀安装路径：" VerticalAlignment="Center" Margin="5"/>
+                <TextBox x:Name="path_TextBox" Grid.Column="1" BorderBrush="Black" VerticalAlignment="Center" Margin="5"/>
+                <Button x:Name="selectPath_Button" Content="选择" Grid.Column="2" VerticalAlignment="Center" Margin="5" Padding="10,5" 
+                        Click="selectPath_Button_Click"/>
+                <Button x:Name="help_Button" Content="帮助" Grid.Column="3" VerticalAlignment="Center" Margin="5" Padding="10,5" 
+                        Click="help_Button_Click"/>
+
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="第二步：检查天刀文件" Grid.Row="1" BorderBrush="Black" Margin="10">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Button x:Name="checkFile_Button" Content="开始检查天刀文件"  Grid.ColumnSpan="2" Margin="5" Padding="5" 
+                        Click="checkFile_Button_Click"/>
+
+                <TextBlock Text="检查状态：" Grid.Row="1" VerticalAlignment="Center"/>
+                <TextBlock x:Name="checkFile_TextBlock" Text="未开始" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="第三步：请根据情况操作" Grid.Row="2" BorderBrush="Black" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <GroupBox Header="我的游戏文件出了问题，需要他人帮助：" BorderBrush="Black" Margin="5" Foreground="Red">
+                    <StackPanel VerticalAlignment="Top" Margin="5">
+                        <Button x:Name="import_Button" Content="导入【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" Padding="20,5" 
+                                Click="import_Button_Click"/>
+                        <TextBlock Text="请导入其他人提供的" HorizontalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="【正常文件信息数据】" HorizontalAlignment="Center" Margin="5"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="我的游戏文件正常，想要帮助他人：" Grid.Column="1" BorderBrush="Black" Margin="5" Foreground="#FF279A32">
+                    <StackPanel VerticalAlignment="Top" Margin="5">
+                        <Button x:Name="export_Button" Content="保存【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" Padding="20,5" 
+                                Click="export_Button_Click"/>
+                        <TextBlock Text="请保存【正常文件信息数据】" HorizontalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="并将保存的文件提供给需要检测的人" HorizontalAlignment="Center" Margin="5"/>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</Window>
