@@ -27,37 +27,94 @@ namespace 天刀文件校验工具
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<string> tdFolders = new List<string>();
+        /// <summary>
+        /// 本地的检测结果
+        /// </summary>
+        public static Dictionary<string, string> allFilePathAndMD5 = new Dictionary<string, string>();
 
-        public static List<Dictionary<string, string>> allFilePathAndMD5 = new List<Dictionary<string, string>>();
+        /// <summary>
+        /// 导入的检测结果
+        /// </summary>
+        public static Dictionary<string, string> allFilePathAndMD5Import = new Dictionary<string, string>();
 
-        public static List<Dictionary<string, string>> allFilePathAndMD5Import = new List<Dictionary<string, string>>();
+        /// <summary>
+        /// 所有要检测的子路径名
+        /// </summary>
+        private readonly List<string> foldersNeedToCheck = new List<string>()
+        {
+            $"\\Data",
+            $"\\Data_x64",
+            $"\\Dll_vc15",
+            $"\\DLL_X64",
 
-        string errorFiles = string.Empty;
+            /*
+            $"",
+            $"\\Cache",
+            $"\\Data",
+            $"\\Data_x64",
+            $"\\Dll_vc15",
+            $"\\DLL_X64",
+            $"\\Microsoft.VC80.CRT",
+            //$"\\QBrowser",
+            $"\\SFC",
+            $"\\TCLS",
+            //$"\\TenProtect64",
+            //$"\\tqm",
+            //$"\\TQM64",
+            //$"\\WebBrowser",
+            //$"\\WeGameLauncher",
+            $"\\Win7",
+            $"\\XVersion",
+            */
+        };
 
-        int allFilesCount = 0;
-        int workDoneCount = 0;
+        /// <summary>
+        /// 出错的文件信息
+        /// </summary>
+        //private string errorFiles;
 
-        string path;
+        /// <summary>
+        /// 总文件数量
+        /// </summary>
+        private int allFilesCount;
+
+        /// <summary>
+        /// 已处理的文件数量
+        /// </summary>
+        private int workDoneCount;
+
+        /// <summary>
+        /// 选择的文件路径（天刀的根路径）
+        /// </summary>
+        private string parentPath;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            import_Button.IsEnabled = false;
+            export_Button.IsEnabled = false;
         }
 
+        //选择文件路径
         private void selectPath_Button_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.FileName="WuXia.exe";
-            openFileDialog.DefaultExt = "WuXia.exe"; // Default file extension
-            openFileDialog.Filter = "天涯明月刀OL主程序|WuXia.exe"; // Filter files by extension
 
-            if (openFileDialog.ShowDialog()==true)
+            openFileDialog.FileName = "WuXia.exe";
+            openFileDialog.DefaultExt = "WuXia.exe";
+            openFileDialog.Filter = "天涯明月刀OL主程序|WuXia.exe";
+
+            if (openFileDialog.ShowDialog() == true)
             {
                 path_TextBox.Text = openFileDialog.FileName.Replace("\\WuXia.exe", string.Empty);
+
+                import_Button.IsEnabled = false;
+                export_Button.IsEnabled = false;
             }
         }
 
+        //帮助信息
         private void help_Button_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(
@@ -68,160 +125,8 @@ namespace 天刀文件校验工具
                 "如何找到天刀安装目录");
         }
 
-        private void checkFile_Button_Click(object sender, RoutedEventArgs e)
-        {
-            path = path_TextBox.Text;
-            new Thread(GetAllFile).Start();
-        }
-
-        private void GetAllFile()
-        {
-            allFilesCount = 0;
-            workDoneCount = 0;
-            errorFiles = string.Empty;
-
-            var time = new Stopwatch();
-            time.Start();
-
-            if (File.Exists($"{path}\\WuXia.exe"))
-            {
-                //添加所有的文件夹路径
-                tdFolders.Add($"{path}");
-                tdFolders.Add($"{path}\\Cache");
-                tdFolders.Add($"{path}\\Data");
-                tdFolders.Add($"{path}\\Data_x64");
-                tdFolders.Add($"{path}\\Dll_vc15");
-                tdFolders.Add($"{path}\\DLL_X64");
-                tdFolders.Add($"{path}\\Microsoft.VC80.CRT");
-                //tdFolders.Add($"{path}\\QBrowser");
-                tdFolders.Add($"{path}\\SFC");
-                tdFolders.Add($"{path}\\TCLS");
-                //tdFolders.Add($"{path}\\TenProtect64");
-                //tdFolders.Add($"{path}\\tqm");
-                //tdFolders.Add($"{path}\\TQM64");
-                //tdFolders.Add($"{path}\\WebBrowser");
-                //tdFolders.Add($"{path}\\WeGameLauncher");
-                tdFolders.Add($"{path}\\Win7");
-                tdFolders.Add($"{path}\\XVersion");
-
-                Dispatcher.Invoke(()=> 
-                { 
-                    checkFile_TextBlock.Text = "正在获取文件列表..."; 
-                });
-
-                foreach (var folderPath in tdFolders)
-                {
-                    if (folderPath == path)
-                    {
-                        allFilesCount += Directory.GetFiles(folderPath, "*", SearchOption.TopDirectoryOnly).Length;
-                    }
-                    else
-                    {
-                        allFilesCount += Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories).Length; ;
-                    }
-                }
-
-                Dispatcher.Invoke(() =>
-                {
-                    checkFile_TextBlock.Text = $"开始记录文件特征...";
-                });
-
-                //依次处理每个路径中的文件
-                foreach (var folderPath in tdFolders)
-                {
-                    if (folderPath == path)
-                    {
-                        Dictionary<string, string> result = new Dictionary<string, string>();
-                        GetAllFilePathAndMD5InFolder(folderPath, false, result);
-                        allFilePathAndMD5.Add(result) ;
-                    }
-                    else
-                    {
-                        Dictionary<string, string> result = new Dictionary<string, string>();
-                        GetAllFilePathAndMD5InFolder(folderPath, true, result);
-                        allFilePathAndMD5.Add(result);
-                    }
-                }
-
-                File.WriteAllText(Environment.CurrentDirectory+"\\errorFiles.txt", errorFiles);
-
-                time.Stop();
-
-                Dispatcher.Invoke(() =>
-                {
-                    checkFile_TextBlock.Text = $"{workDoneCount}个文件已处理完成，{allFilesCount-workDoneCount}个文件被忽略，耗时{time.Elapsed.TotalSeconds}秒";
-                });
-            }
-            else
-            {
-                MessageBox.Show("天刀目录错误！请检查后重试！", "出错啦！");
-            }
-        }
-
-        /// <summary>
-        /// 获取某路径中全部的文件的文件路径和MD5值
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <param name="isGetSubfolder"></param>
-        private void GetAllFilePathAndMD5InFolder(string folder,bool isGetSubfolder, Dictionary<string, string> targetDic)
-        {
-            DirectoryInfo infos = new DirectoryInfo(folder);
-
-            //获取全部文件
-            foreach (var file in infos.GetFiles())
-            {
-                using (var md5 = MD5.Create())
-                {
-                    if (file.Length>0)
-                    {
-                        var fileMd5 = CalculateMD5(file.FullName, md5);
-
-                        if (targetDic.ContainsKey(fileMd5))
-                        {
-                            errorFiles += $"{targetDic[fileMd5]}\t{file.FullName}";
-                        }
-                        else
-                        {
-                            targetDic.Add(fileMd5, file.FullName);
-
-                            workDoneCount++;
-
-                            Dispatcher.Invoke(() =>
-                            {
-                                checkFile_TextBlock.Text = $"已处理{workDoneCount}个文件，共{allFilesCount}个";
-                            });
-                        }
-                    }
-                }
-            }
-
-            //获取全部子文件的文件
-            if (isGetSubfolder)
-            {
-                foreach (var directory in infos.GetDirectories())
-                {
-                    GetAllFilePathAndMD5InFolder(directory.FullName,true, targetDic);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取文件的MD5
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="md5tool"></param>
-        /// <returns></returns>
-        private string CalculateMD5(string filename,MD5 md5tool)
-        {
-            using (var stream = File.OpenRead(filename))
-            {
-                var hash = md5tool.ComputeHash(stream);
-                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-            }
-        }
-
-
-        private void import_Button_Click(object sender, RoutedEventArgs e)
+        //导入后自动开始对比
+        private void Import_Button_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -229,13 +134,11 @@ namespace 天刀文件校验工具
             openFileDialog.DefaultExt = "Json文件 (.txt)|*.Json";
             openFileDialog.Filter = "Json文件 (.txt)|*.Json";
 
-            string openPath = string.Empty;
-
             if (openFileDialog.ShowDialog() == true)
             {
-                openPath = openFileDialog.FileName;
+                string openPath = openFileDialog.FileName;
                 string fileData = File.ReadAllText(openPath);
-                allFilePathAndMD5Import = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(fileData);
+                allFilePathAndMD5Import = JsonConvert.DeserializeObject<Dictionary<string, string>>(fileData);
             }
             else
             {
@@ -245,14 +148,17 @@ namespace 天刀文件校验工具
             ObservableCollection<FileState> result = new ObservableCollection<FileState>();
 
             //开始对比
-            for (int i = 0; i < allFilePathAndMD5.Count; i++)
+            foreach (var item in allFilePathAndMD5Import)
             {
-                foreach (var item in allFilePathAndMD5Import[i])
+                //如果同路径文件不存在，那么是文件缺失
+                if (allFilePathAndMD5.ContainsKey(item.Key) == false)
                 {
-                    if (allFilePathAndMD5[i].ContainsKey(item.Key)==false)
-                    {
-                        result.Add(new FileState() { FilePath = item.Value, State = "文件缺失" });
-                    }
+                    result.Add(new FileState() { FilePath = item.Key, State = "文件缺失" });
+                }
+                //如果同路径文件的MD5不同，那么文件是不同的
+                else if (allFilePathAndMD5[item.Key] != item.Value)
+                {
+                    result.Add(new FileState() { FilePath = item.Key, State = "文件不同" });
                 }
             }
 
@@ -260,7 +166,8 @@ namespace 天刀文件校验工具
             resultWindow.Show();
         }
 
-        private void export_Button_Click(object sender, RoutedEventArgs e)
+        //导出分析结果
+        private void Export_Button_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
@@ -268,9 +175,8 @@ namespace 天刀文件校验工具
             saveFileDialog.DefaultExt = "Json文件 (.txt)|*.Json";
             saveFileDialog.Filter = "Json文件 (.txt)|*.Json";
 
-            string savePath = string.Empty;
-
-            if (saveFileDialog.ShowDialog()==true)
+            string savePath;
+            if (saveFileDialog.ShowDialog() == true)
             {
                 savePath = saveFileDialog.FileName;
             }
@@ -281,8 +187,159 @@ namespace 天刀文件校验工具
 
             File.WriteAllText(savePath, JsonConvert.SerializeObject(allFilePathAndMD5));
         }
+
+        //检查文件
+        private void CheckFile_Button_Click(object sender, RoutedEventArgs e)
+        {
+            parentPath = path_TextBox.Text;
+
+            //开始获取信息
+            //设置IsBackground可以保证退出的时候线程也关闭
+            new Thread(GetAllFilesData) { IsBackground = true }.Start();
+        }
+
+        /// <summary>
+        /// 获取全部文件的信息
+        /// </summary>
+        private void GetAllFilesData()
+        {
+            allFilesCount = 0;
+            workDoneCount = 0;
+            //errorFiles = string.Empty;
+
+            //错误保护
+            if (File.Exists($"{parentPath}\\WuXia.exe") == false)
+            {
+                MessageBox.Show("天刀安装目录错误！请检查后重试！", "出错啦！");
+
+                return;
+            }
+
+            var time = new Stopwatch();
+            time.Start();
+
+            Dispatcher.Invoke(() =>
+            {
+                checkFile_TextBlock.Text = "正在获取文件列表...";
+            });
+
+            //拼接完整的目录
+            var foldersNeedToCheckWithFullPath = new List<string>();
+            foreach (var folderName in foldersNeedToCheck)
+            {
+                foldersNeedToCheckWithFullPath.Add(parentPath + folderName);
+            }
+
+            //对文件进行计数，并整理出全部的路径
+            var allFilePaths = new List<string>();
+            foreach (var folderPath in foldersNeedToCheckWithFullPath)
+            {
+                if (folderPath == parentPath)
+                {
+                    //对于根目录，只需要统计其下的文件
+                    GetFilePath(folderPath, false, allFilePaths);
+                }
+                else
+                {
+                    //对于其他目录，需要统计其内部的全部文件
+                    GetFilePath(folderPath, true, allFilePaths);
+                }
+            }
+            allFilesCount = allFilePaths.Count;
+
+            Dispatcher.Invoke(() =>
+            {
+                progressBar.Value = 0;
+                progressBar.Maximum = allFilesCount;
+                checkFile_TextBlock.Text = $"统计完毕 开始记录文件特征...";
+            });
+
+            //依次处理每个路径中的文件
+            foreach (var filePath in allFilePaths)
+            {
+                workDoneCount++;
+
+                Dispatcher.Invoke(() =>
+                {
+                    progressBar.Value = workDoneCount;
+                });
+
+                Dispatcher.Invoke(() =>
+                {
+                    checkFile_TextBlock.Text = $"正在处理第{workDoneCount}个文件 共{allFilesCount}个文件 处理大文件时需要较长时间 请耐心等待...";
+                });
+
+                using (var md5 = MD5.Create())
+                {
+                    var fileMD5 = CalculateMD5(filePath, md5);
+
+                    var relativePath = filePath.Replace(parentPath, "[天刀根目录]");
+                    allFilePathAndMD5.Add(relativePath, fileMD5);
+                }
+            }
+
+            //File.WriteAllText(Environment.CurrentDirectory + "\\errorFiles.txt", errorFiles);
+
+            time.Stop();
+
+            Dispatcher.Invoke(() =>
+            {
+                progressBar.Value = progressBar.Maximum;
+                checkFile_TextBlock.Text = $"{workDoneCount}个文件已处理完成，耗时{time.Elapsed.TotalSeconds}秒";
+
+                import_Button.IsEnabled = true;
+                export_Button.IsEnabled = true;
+            });
+        }
+
+        /// <summary>
+        /// 获取某路径下的文件
+        /// </summary>
+        /// <param name="folderPath">文件夹路径</param>
+        /// <param name="isGetSubFolder">是否获取子文件夹内的文件</param>
+        /// <param name="result">要存储结果的List</param>
+        private void GetFilePath(string folderPath, bool isGetSubFolder, List<string> result)
+        {
+            DirectoryInfo infos = new DirectoryInfo(folderPath);
+
+            //获取全部文件
+            foreach (var file in infos.GetFiles())
+            {
+                if (file.Length > 0)
+                {
+                    result.Add(file.FullName);
+                }
+            }
+
+            //如果需要 就获取全部子文件的文件
+            if (isGetSubFolder)
+            {
+                foreach (var directory in infos.GetDirectories())
+                {
+                    GetFilePath(directory.FullName, true, result);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取文件的MD5
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <param name="md5Tool">在外部using的md5实例</param>
+        /// <returns></returns>
+        private string CalculateMD5(string filePath, MD5 md5Tool)
+        {
+            using (var stream = File.OpenRead(filePath))
+            {
+                var hash = md5Tool.ComputeHash(stream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
+        }
     }
 
+    /// <summary>
+    /// 用于存储对比结果的类
+    /// </summary>
     public class FileState
     {
         public string FilePath { get; set; }

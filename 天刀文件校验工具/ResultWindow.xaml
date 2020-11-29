@@ -1,17 +1,41 @@
-﻿<Window x:Class="天刀文件校验工具.ResultWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:天刀文件校验工具"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="天刀文件校验工具.ResultWindow"
         mc:Ignorable="d"
         Title="ResultWindow" Height="450" Width="800">
+    <Window.Resources>
+    </Window.Resources>
     <Grid>
-        <ListView x:Name="main_ListView">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="main_ListView" Background="#273039" Foreground="White" ItemContainerStyle="{DynamicResource ListViewItemStyle1}">
+            <ListView.Resources>
+                <Style x:Key="ListViewItemStyle1" TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" Value="#3977A6" />
+                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="BorderBrush" Value="Black" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#3977A6" />
+                            <Setter Property="BorderBrush" Value="Black" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Resources>
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="文件状态" DisplayMemberBinding="{Binding Path=State}"/>
-                    <GridViewColumn Header="文件名" DisplayMemberBinding="{Binding Path=FilePath}"/>
+                    <GridViewColumn Header="文件状态" DisplayMemberBinding="{Binding State}" />
+                    <GridViewColumn Header="文件名" DisplayMemberBinding="{Binding FilePath}" />
                 </GridView>
             </ListView.View>
         </ListView>

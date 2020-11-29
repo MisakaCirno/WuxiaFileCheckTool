@@ -7,11 +7,11 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("天刀文件校验工具")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("天刀客户端自助修复工具 v1.0")]
+[assembly: AssemblyDescription("By : 御琪幽然")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("天刀文件校验工具")]
+[assembly: AssemblyProduct("天刀客户端自助修复工具")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -30,6 +30,8 @@ namespace 天刀文件校验工具
             InitializeComponent();
 
             main_ListView.ItemsSource = fileStates;
+
+            ListViewItem listViewItem = new ListViewItem();
         }
     }
 }

@@ -5,81 +5,187 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:天刀文件校验工具"
         mc:Ignorable="d"
-        Title="天刀文件自助修复工具"
-        MinHeight="480" MinWidth="650" 
-        Height="480" Width="650">
-    <Grid>
+        Title="天刀客户端自助修复工具 v1.0"
+        MinHeight="510" MinWidth="680"
+        Height="510" Width="680"
+        Foreground="White">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD" />
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1" />
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6" />
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B" />
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#525252" />
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="Black" />
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="White" />
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            <Setter Property="Background" Value="#587193" />
+            <Setter Property="BorderBrush" Value="#BAC2AB" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}" />
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}" />
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="#3977A6" />
+            <Setter Property="BorderThickness" Value="2" />
+        </Style>
+
+        <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="#273039">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <GroupBox Header="第一步：选择天刀安装路径" BorderBrush="Black" Margin="10">
-            <Grid Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+        <Border Margin="10,10,10,0">
+            <StackPanel>
+                <TextBlock Text="第一步：选择天刀安装路径" Style="{StaticResource TitleTextBlockStyle}" />
 
-                <TextBlock Text="天刀安装路径：" VerticalAlignment="Center" Margin="5"/>
-                <TextBox x:Name="path_TextBox" Grid.Column="1" BorderBrush="Black" VerticalAlignment="Center" Margin="5"/>
-                <Button x:Name="selectPath_Button" Content="选择" Grid.Column="2" VerticalAlignment="Center" Margin="5" Padding="10,5" 
-                        Click="selectPath_Button_Click"/>
-                <Button x:Name="help_Button" Content="帮助" Grid.Column="3" VerticalAlignment="Center" Margin="5" Padding="10,5" 
-                        Click="help_Button_Click"/>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            </Grid>
-        </GroupBox>
+                    <TextBlock Text="天刀安装路径："
+                           VerticalAlignment="Center" />
 
-        <GroupBox Header="第二步：检查天刀文件" Grid.Row="1" BorderBrush="Black" Margin="10">
-            <Grid Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+                    <TextBox x:Name="path_TextBox"
+                         Grid.Column="1"
+                         IsReadOnly="True" BorderBrush="White" VerticalAlignment="Center" VerticalContentAlignment="Center" MinHeight="{Binding ElementName=selectPath_Button,Path=ActualHeight}" Margin="5" Background="#FF4D5B68" Foreground="White" />
 
-                <Button x:Name="checkFile_Button" Content="开始检查天刀文件"  Grid.ColumnSpan="2" Margin="5" Padding="5" 
-                        Click="checkFile_Button_Click"/>
+                    <Button x:Name="selectPath_Button" Content="选择"
+                        Grid.Column="2"
+                        VerticalAlignment="Center" Margin="5" Padding="10,5"
+                        Click="selectPath_Button_Click" />
 
-                <TextBlock Text="检查状态：" Grid.Row="1" VerticalAlignment="Center"/>
-                <TextBlock x:Name="checkFile_TextBlock" Text="未开始" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="5"/>
+                    <Button x:Name="help_Button" Content="帮助"
+                        Grid.Column="3"
+                        VerticalAlignment="Center" Margin="5" Padding="10,5"
+                        Click="help_Button_Click" />
+                </Grid>
+            </StackPanel>
+        </Border>
 
-            </Grid>
-        </GroupBox>
+        <Border Grid.Row="1" Margin="10,10,10,0">
+            <StackPanel>
+                <TextBlock Text="第二步：检查天刀文件" Style="{StaticResource TitleTextBlockStyle}" />
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" MaxWidth="180" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
 
-        <GroupBox Header="第三步：请根据情况操作" Grid.Row="2" BorderBrush="Black" Margin="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                    <Button x:Name="checkFile_Button" Content="开始检查天刀文件"
+                        Grid.Column="2"
+                        Margin="5,0" Padding="10,5" HorizontalAlignment="Center"
+                        Click="CheckFile_Button_Click" />
 
-                <GroupBox Header="我的游戏文件出了问题，需要他人帮助：" BorderBrush="Black" Margin="5" Foreground="Red">
-                    <StackPanel VerticalAlignment="Top" Margin="5">
-                        <Button x:Name="import_Button" Content="导入【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" Padding="20,5" 
-                                Click="import_Button_Click"/>
-                        <TextBlock Text="请导入其他人提供的" HorizontalAlignment="Center" Margin="5"/>
-                        <TextBlock Text="【正常文件信息数据】" HorizontalAlignment="Center" Margin="5"/>
-                    </StackPanel>
-                </GroupBox>
+                    <ProgressBar x:Name="progressBar"
+                             Grid.ColumnSpan="2"
+                             Height="30" Background="#FF1B1C1E" BorderBrush="#FF6C6C6C" Foreground="#FF237499" />
 
-                <GroupBox Header="我的游戏文件正常，想要帮助他人：" Grid.Column="1" BorderBrush="Black" Margin="5" Foreground="#FF279A32">
-                    <StackPanel VerticalAlignment="Top" Margin="5">
-                        <Button x:Name="export_Button" Content="保存【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" Padding="20,5" 
-                                Click="export_Button_Click"/>
-                        <TextBlock Text="请保存【正常文件信息数据】" HorizontalAlignment="Center" Margin="5"/>
-                        <TextBlock Text="并将保存的文件提供给需要检测的人" HorizontalAlignment="Center" Margin="5"/>
-                    </StackPanel>
-                </GroupBox>
-            </Grid>
-        </GroupBox>
+                    <TextBlock Text="检查状态："
+                           Grid.Row="1"
+                           VerticalAlignment="Center" HorizontalAlignment="Left"  Foreground="#FF429DD6" />
+                    <TextBlock x:Name="checkFile_TextBlock" Text="未开始"
+                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                           VerticalAlignment="Center" Margin="5" Foreground="#FF429DD6" />
+                </Grid>
+            </StackPanel>
+        </Border>
 
+        <Border Grid.Row="2" Margin="10">
+            <StackPanel>
+                <TextBlock Text="第三步：请根据情况操作" Style="{StaticResource TitleTextBlockStyle}" />
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Border BorderBrush="#FF009600" Margin="0,0,5,0">
+                        <StackPanel VerticalAlignment="Top" Margin="5">
+                            <TextBlock Text="我的游戏文件正常，想要帮助他人："
+                                       Foreground="#FF279A32" HorizontalAlignment="Center" FontSize="16" Margin="0,0,0,10" />
+                            <Button x:Name="export_Button" Content="保存【正常文件信息数据】"
+                                HorizontalAlignment="Center" Margin="5" Padding="20,5" IsEnabled="False"
+                                Click="Export_Button_Click" />
+                            <TextBlock Text="请保存【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" />
+                            <TextBlock Text="并将保存的文件提供给需要检测的人" HorizontalAlignment="Center" Margin="5" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" BorderBrush="#FF960000" Margin="5,0,0,0">
+                        <StackPanel VerticalAlignment="Top" Margin="5">
+                            <TextBlock Text="我的游戏文件出了问题，需要他人帮助："
+                                       Foreground="Red"  HorizontalAlignment="Center" FontSize="16" Margin="0,0,0,10" />
+                            <Button x:Name="import_Button" Content="导入【正常文件信息数据】"
+                                HorizontalAlignment="Center" Margin="5" Padding="20,5"  IsEnabled="False"
+                                Click="Import_Button_Click" />
+                                <TextBlock Text="请导入其他人提供的" HorizontalAlignment="Center" Margin="5" />
+                                <TextBlock Text="【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" />
+                            </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
