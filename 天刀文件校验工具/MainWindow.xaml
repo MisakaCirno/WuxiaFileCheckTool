@@ -4,61 +4,71 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:天刀文件校验工具"
+        
         mc:Ignorable="d"
         Title="天刀客户端自助修复工具 v1.0"
-        MinHeight="510" MinWidth="680"
-        Height="510" Width="680"
-        Foreground="White">
+        
+        Height="535" Width="680"
+        ResizeMode="CanMinimize">
+
     <Window.Resources>
+        <Style x:Key="Title_TextBlock_Style" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="10,10,10,0"/>
+        </Style>
+
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2" />
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
-        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
-        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD" />
-        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1" />
-        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6" />
-        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B" />
-        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#525252" />
-        <SolidColorBrush x:Key="Button.Disabled.Border" Color="Black" />
-        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="White" />
+
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+
         <Style TargetType="{x:Type Button}">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-            <Setter Property="Background" Value="#587193" />
-            <Setter Property="BorderBrush" Value="#BAC2AB" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="1" />
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
-                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="5">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsDefaulted" Value="true">
-                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}" />
-                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}" />
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}" />
-                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}" />
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}" />
-                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}" />
-                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}" />
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -66,20 +76,128 @@
             </Setter>
         </Style>
 
-        <Style TargetType="Border">
-            <Setter Property="BorderBrush" Value="#3977A6" />
-            <Setter Property="BorderThickness" Value="2" />
-        </Style>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
 
-        <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="Bold" />
+        <Style x:Key="CornerRadius_TextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
+        <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
+        
+        <Style x:Key="CornerRadius_ProgressBarStyle" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
+            <Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid x:Name="TemplateRoot">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Determinate"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Animation">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0.25"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="Animation">
+                                                <EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5"/>
+                                                <EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5"/>
+                                                <EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5"/>
+                                            </PointAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="5"/>
+                            <Rectangle x:Name="PART_Track" RadiusX="5" RadiusY="5"/>
+                            <Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
+                                <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}"  RadiusX="5" RadiusY="5"/>
+                                <Rectangle x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5"  RadiusX="5" RadiusY="5">
+                                    <Rectangle.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                            </Grid>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Vertical">
+                                <Setter Property="LayoutTransform" TargetName="TemplateRoot">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsIndeterminate" Value="true">
+                                <Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
-    <Grid Background="#273039">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="Border">
+                <Setter Property="Background" Value="#FFF1F1F1"/>
+                <Setter Property="BorderBrush" Value="#b8b8b8"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="10"/>
+            </Style>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -88,9 +206,9 @@
 
         <Border Margin="10,10,10,0">
             <StackPanel>
-                <TextBlock Text="第一步：选择天刀安装路径" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="第一步：选择天刀安装路径" Style="{DynamicResource Title_TextBlock_Style}"/>
 
-                <Grid Margin="10">
+                <Grid Margin="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -103,7 +221,7 @@
 
                     <TextBox x:Name="path_TextBox"
                          Grid.Column="1"
-                         IsReadOnly="True" BorderBrush="White" VerticalAlignment="Center" VerticalContentAlignment="Center" MinHeight="{Binding ElementName=selectPath_Button,Path=ActualHeight}" Margin="5" Background="#FF4D5B68" Foreground="White" />
+                         IsReadOnly="True" VerticalAlignment="Center" VerticalContentAlignment="Center" MinHeight="{Binding ElementName=selectPath_Button,Path=ActualHeight}" Margin="5" Style="{DynamicResource CornerRadius_TextBoxStyle}"/>
 
                     <Button x:Name="selectPath_Button" Content="选择"
                         Grid.Column="2"
@@ -120,8 +238,9 @@
 
         <Border Grid.Row="1" Margin="10,10,10,0">
             <StackPanel>
-                <TextBlock Text="第二步：检查天刀文件" Style="{StaticResource TitleTextBlockStyle}" />
-                <Grid Margin="10">
+                <TextBlock Text="第二步：检查天刀文件"  Style="{DynamicResource Title_TextBlock_Style}"/>
+
+                <Grid Margin="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
@@ -140,31 +259,37 @@
 
                     <ProgressBar x:Name="progressBar"
                              Grid.ColumnSpan="2"
-                             Height="30" Background="#FF1B1C1E" BorderBrush="#FF6C6C6C" Foreground="#FF237499" />
+                                 VerticalAlignment="Stretch" Style="{DynamicResource CornerRadius_ProgressBarStyle}"/>
 
                     <TextBlock Text="检查状态："
                            Grid.Row="1"
-                           VerticalAlignment="Center" HorizontalAlignment="Left"  Foreground="#FF429DD6" />
+                           VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#FF4836FF"/>
                     <TextBlock x:Name="checkFile_TextBlock" Text="未开始"
                            Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                           VerticalAlignment="Center" Margin="5" Foreground="#FF429DD6" />
+                           VerticalAlignment="Center" Margin="5" Foreground="#FF4836FF"/>
                 </Grid>
             </StackPanel>
         </Border>
 
         <Border Grid.Row="2" Margin="10">
             <StackPanel>
-                <TextBlock Text="第三步：请根据情况操作" Style="{StaticResource TitleTextBlockStyle}" />
-                <Grid Margin="10">
+                <TextBlock Text="第三步：请根据情况操作"  Style="{DynamicResource Title_TextBlock_Style}"/>
+
+                <Grid Margin="15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Border BorderBrush="#FF009600" Margin="0,0,5,0">
+                    <Border Margin="0,0,5,0">
+                        <Border.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#FF00A000"/>
+                            </Style>
+                        </Border.Resources>
                         <StackPanel VerticalAlignment="Top" Margin="5">
                             <TextBlock Text="我的游戏文件正常，想要帮助他人："
-                                       Foreground="#FF279A32" HorizontalAlignment="Center" FontSize="16" Margin="0,0,0,10" />
+                                       HorizontalAlignment="Center" FontSize="16" Margin="0,0,0,10" />
                             <Button x:Name="export_Button" Content="保存【正常文件信息数据】"
                                 HorizontalAlignment="Center" Margin="5" Padding="20,5" IsEnabled="False"
                                 Click="Export_Button_Click" />
@@ -173,16 +298,21 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1" BorderBrush="#FF960000" Margin="5,0,0,0">
+                    <Border Grid.Column="1" Margin="5,0,0,0">
+                        <Border.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Red"/>
+                            </Style>
+                        </Border.Resources>
                         <StackPanel VerticalAlignment="Top" Margin="5">
                             <TextBlock Text="我的游戏文件出了问题，需要他人帮助："
-                                       Foreground="Red"  HorizontalAlignment="Center" FontSize="16" Margin="0,0,0,10" />
+                                        HorizontalAlignment="Center" FontSize="16" Margin="0,0,0,10" />
                             <Button x:Name="import_Button" Content="导入【正常文件信息数据】"
                                 HorizontalAlignment="Center" Margin="5" Padding="20,5"  IsEnabled="False"
                                 Click="Import_Button_Click" />
-                                <TextBlock Text="请导入其他人提供的" HorizontalAlignment="Center" Margin="5" />
-                                <TextBlock Text="【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" />
-                            </StackPanel>
+                            <TextBlock Text="请导入其他人提供的" HorizontalAlignment="Center" Margin="5" />
+                            <TextBlock Text="【正常文件信息数据】" HorizontalAlignment="Center" Margin="5" />
+                        </StackPanel>
                     </Border>
                 </Grid>
             </StackPanel>
