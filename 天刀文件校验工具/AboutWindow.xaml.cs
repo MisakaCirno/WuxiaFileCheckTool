@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,22 +15,23 @@ using System.Windows.Shapes;
 namespace 天刀客户端自助修复工具
 {
     /// <summary>
-    /// ResultWindow.xaml 的交互逻辑
+    /// AboutWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class ResultWindow : Window
+    public partial class AboutWindow : Window
     {
-        public ResultWindow()
+        public AboutWindow()
         {
             InitializeComponent();
         }
 
-        public ResultWindow(ObservableCollection<FileState> fileStates)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
+            System.Diagnostics.Process.Start("https://github.com/MisakaCirno/WuxiaFileCheckTool");
+        }
 
-            main_ListView.ItemsSource = fileStates;
-
-            ListViewItem listViewItem = new ListViewItem();
+        private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://xiage.yy.com/thread-252048-1-1.html");
         }
     }
 }

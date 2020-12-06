@@ -20,7 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace 天刀文件校验工具
+namespace 天刀客户端自助修复工具
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
@@ -42,12 +42,14 @@ namespace 天刀文件校验工具
         /// </summary>
         private readonly List<string> foldersNeedToCheck = new List<string>()
         {
+            //测试用路径
+            /*
             $"\\Data",
             $"\\Data_x64",
             $"\\Dll_vc15",
             $"\\DLL_X64",
+            */
 
-            /*
             $"",
             $"\\Cache",
             $"\\Data",
@@ -65,7 +67,6 @@ namespace 天刀文件校验工具
             //$"\\WeGameLauncher",
             $"\\Win7",
             $"\\XVersion",
-            */
         };
 
         /// <summary>
@@ -114,15 +115,32 @@ namespace 天刀文件校验工具
             }
         }
 
-        //帮助信息
-        private void help_Button_Click(object sender, RoutedEventArgs e)
+        private void Help_MenuItem_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(
+                "如何找到天刀目录：\r\n" +
                 "1.启动Wegame\r\n" +
                 "2.在【我的应用】中找到【天涯明月刀】，点击【右键】\r\n" +
                 "3.选择【目录】\r\n" +
-                "4.将弹出的【文件夹的路径】复制到本工具的【路径文本框】中即可\r\n",
-                "如何找到天刀安装目录");
+                "4.将弹出的【文件夹的路径】复制到本工具的【路径文本框】中即可\r\n" +
+                "\r\n" +
+                "如何使用：\r\n" +
+                "在检测结果中：\r\n" +
+                "“缺失文件”代表：此文件在正常客户端中存在，而在异常客户端中不存在。\r\n" +
+                "“不同文件”代表：此文件在正常客户端中与异常客户端中不同。\r\n" +
+                "只需要让有正常客户端的好友将正常的文件通过QQ等方式发给你，然后替换掉对应文件即可。\r\n" +
+                "（注：游戏内出现的问题，主要可能源自于SFC文件的异常）\r\n" +
+                "【建议在替换前备份原文件，以保证在出错的情况下可以还原。】\r\n" +
+                "【如果本工具不能解决问题，建议从官网重新下载安装客户端，不要通过Wegame下载（Wegame的版本可能会比较老，下载后仍需更新多次）。】\r\n" +
+                "\r\n" +
+                "工具原理：\r\n" +
+                "获取两个客户端的MD5后，进行对比，从而判断客户端的异常信息。\r\n",
+                "工具使用帮助", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void About_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            new AboutWindow().ShowDialog();
         }
 
         //导入后自动开始对比
@@ -130,15 +148,24 @@ namespace 天刀文件校验工具
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
-            openFileDialog.FileName = "MoonlightBlade_FilesMD5Data.Json";
-            openFileDialog.DefaultExt = "Json文件 (.txt)|*.Json";
-            openFileDialog.Filter = "Json文件 (.txt)|*.Json";
+            openFileDialog.FileName = "MoonlightBlade_FilesMD5Data.json";
+            openFileDialog.DefaultExt = "Json文件 (.json)|*.json";
+            openFileDialog.Filter = "Json文件 (.json)|*.json";
 
             if (openFileDialog.ShowDialog() == true)
             {
                 string openPath = openFileDialog.FileName;
                 string fileData = File.ReadAllText(openPath);
-                allFilePathAndMD5Import = JsonConvert.DeserializeObject<Dictionary<string, string>>(fileData);
+                try
+                {
+                    allFilePathAndMD5Import.Clear();
+                    allFilePathAndMD5Import = JsonConvert.DeserializeObject<Dictionary<string, string>>(fileData);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("导入的文件不正确！请重新确认导入的文件是否为本工具导出的文件！", "出错啦！");
+                    return;
+                }
             }
             else
             {
@@ -153,12 +180,12 @@ namespace 天刀文件校验工具
                 //如果同路径文件不存在，那么是文件缺失
                 if (allFilePathAndMD5.ContainsKey(item.Key) == false)
                 {
-                    result.Add(new FileState() { FilePath = item.Key, State = "文件缺失" });
+                    result.Add(new FileState() { FilePath = item.Key, State = "缺失文件" });
                 }
                 //如果同路径文件的MD5不同，那么文件是不同的
                 else if (allFilePathAndMD5[item.Key] != item.Value)
                 {
-                    result.Add(new FileState() { FilePath = item.Key, State = "文件不同" });
+                    result.Add(new FileState() { FilePath = item.Key, State = "不同文件" });
                 }
             }
 
@@ -171,9 +198,9 @@ namespace 天刀文件校验工具
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
-            saveFileDialog.FileName = "MoonlightBlade_FilesMD5Data.Json";
-            saveFileDialog.DefaultExt = "Json文件 (.txt)|*.Json";
-            saveFileDialog.Filter = "Json文件 (.txt)|*.Json";
+            saveFileDialog.FileName = "MoonlightBlade_FilesMD5Data.json";
+            saveFileDialog.DefaultExt = "Json文件 (.txt)|*.json";
+            saveFileDialog.Filter = "Json文件 (.txt)|*.json";
 
             string savePath;
             if (saveFileDialog.ShowDialog() == true)
@@ -191,11 +218,60 @@ namespace 天刀文件校验工具
         //检查文件
         private void CheckFile_Button_Click(object sender, RoutedEventArgs e)
         {
+            //判断文件是否存在
+            if (File.Exists($"{path_TextBox.Text}\\WuXia.exe") == false)
+            {
+                MessageBox.Show("天刀安装目录错误！请检查后重试！", "出错啦！");
+
+                return;
+            }
+
+            //判断进程是否存在
+            if (GetGameState())
+            {
+                MessageBox.Show("检测到游戏正在运行中！为了避免可能出现的问题，请退出游戏后再继续！", "出错啦！");
+                return;
+            }
+
             parentPath = path_TextBox.Text;
 
             //开始获取信息
             //设置IsBackground可以保证退出的时候线程也关闭
             new Thread(GetAllFilesData) { IsBackground = true }.Start();
+        }
+
+        /// <summary>
+        /// 判断游戏进程是否存在
+        /// </summary>
+        /// <returns></returns>
+        private bool GetGameState()
+        {
+            //WuXia_Client.exe
+            //GameFileSystem.exe
+            //
+            //WuXia_Client_x64.exe
+            //GameFileSystem_x64.exe
+            //
+            //WuXia_Client_dx12.exe
+
+            System.Diagnostics.Process[] processList = System.Diagnostics.Process.GetProcesses();
+
+            foreach (System.Diagnostics.Process process in processList)
+            {
+                switch (process.ProcessName)
+                {
+                    case "WuXia_Client":
+                    case "GameFileSystem":
+                    case "WuXia_Client_x64":
+                    case "GameFileSystem_x64":
+                    case "WuXia_Client_dx12":
+                        return true;
+
+                    default:
+                        break;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -207,13 +283,7 @@ namespace 天刀文件校验工具
             workDoneCount = 0;
             //errorFiles = string.Empty;
 
-            //错误保护
-            if (File.Exists($"{parentPath}\\WuXia.exe") == false)
-            {
-                MessageBox.Show("天刀安装目录错误！请检查后重试！", "出错啦！");
-
-                return;
-            }
+            allFilePathAndMD5.Clear();
 
             var time = new Stopwatch();
             time.Start();

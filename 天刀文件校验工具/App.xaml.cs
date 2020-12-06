@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace 天刀文件校验工具
+namespace 天刀客户端自助修复工具
 {
     /// <summary>
     /// App.xaml 的交互逻辑
